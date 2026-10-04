@@ -32,7 +32,7 @@ export const LINKS = [
   },
   {
     href: '/writing',
-    label: 'Blog3',
+    label: 'Blog',
     icon: <PencilLineIcon size={16} />
   },
   {
