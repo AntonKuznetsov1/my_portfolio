@@ -151,6 +151,8 @@ show the bundle growing again.
 
 ## GitHub repository
 
-The checked-out repository is currently the template project, with its `origin` pointing at the template owner's
-GitHub—not Anton's repo. Do not push until the correct project has been cloned or the remote has been safely changed and
-the histories reconciled. The target supplied by Anton is https://github.com/AntonKuznetsov1/my_portfolio.
+This checkout's `origin` points at https://github.com/AntonKuznetsov1/my_portfolio, which is where the portfolio now
+lives. It previously pointed at the template owner's repository, so use the `my_portfolio` URL when cloning fresh.
+
+The pushed history still contains commits inherited from the template project, so the public repository is not a
+from-scratch history.
