@@ -22,16 +22,37 @@ export const getDateTimeFormat = (date) => {
 
 export const dasherize = (text) => String(text).replace(/ +/g, '-').toLowerCase()
 
-export const getMediumFont = async () => {
-  const response = await fetch(new URL('@/assets/SpaceGrotesk-Medium.ttf', import.meta.url))
-  const font = await response.arrayBuffer()
-  return font
+// URL-safe slug: strips accents and punctuation, collapses separators.
+export const slugify = (text) =>
+  String(text ?? '')
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/['’]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 80)
+
+// Appends -2, -3, ... until the slug is free. `taken` is a list of existing slugs.
+export const uniqueSlug = (text, taken = []) => {
+  const base = slugify(text) || 'untitled'
+  const used = new Set(taken)
+  if (!used.has(base)) return base
+
+  let suffix = 2
+  while (used.has(`${base}-${suffix}`)) suffix += 1
+  return `${base}-${suffix}`
 }
 
-export const getBoldFont = async () => {
-  const response = await fetch(new URL('@/assets/SpaceGrotesk-SemiBold.ttf', import.meta.url))
-  const font = await response.arrayBuffer()
-  return font
+export const formatNumber = (value) => new Intl.NumberFormat('en-US').format(Number(value) || 0)
+
+export const getHostname = (url) => {
+  if (!url) return null
+  try {
+    return new URL(url).hostname.replace(/^www\./, '')
+  } catch {
+    return null
+  }
 }
 
 export const isDevelopment = process.env.NODE_ENV === 'development'

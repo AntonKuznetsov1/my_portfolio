@@ -1,46 +1,33 @@
-const options = {
-  method: 'GET',
-  headers: {
-    'Content-Type': 'application/json',
-    Authorization: `Bearer ${process.env.NEXT_PUBLIC_RAINDROP_ACCESS_TOKEN}`
+const RAINDROP_API_URL = 'https://api.raindrop.io/rest/v1'
+const accessToken = process.env.RAINDROP_ACCESS_TOKEN
+
+async function fetchRaindrop(path) {
+  if (!accessToken) return null
+
+  try {
+    const response = await fetch(`${RAINDROP_API_URL}${path}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`
+      }
+    })
+    if (!response.ok) return null
+    return await response.json()
+  } catch {
+    return null
   }
 }
 
-const RAINDROP_API_URL = 'https://api.raindrop.io/rest/v1'
-
 export async function getRaindrops(id, pageIndex = 0) {
-  try {
-    const response = await fetch(
-      `${RAINDROP_API_URL}/raindrops/${id}?` +
-        new URLSearchParams({
-          page: pageIndex,
-          perpage: 50
-        }),
-      options
-    )
-    return await response.json()
-  } catch (error) {
-    console.info(error)
-    return null
-  }
+  const query = new URLSearchParams({ page: String(pageIndex), perpage: '50' })
+  return (await fetchRaindrop(`/raindrops/${id}?${query}`)) ?? { items: [] }
 }
 
 export async function getCollections() {
-  try {
-    const response = await fetch(`${RAINDROP_API_URL}/collections`, options)
-    return await response.json()
-  } catch (error) {
-    console.info(error)
-    return null
-  }
+  return (await fetchRaindrop('/collections')) ?? { items: [] }
 }
 
 export async function getCollection(id) {
-  try {
-    const response = await fetch(`${RAINDROP_API_URL}/collection/${id}`, options)
-    return await response.json()
-  } catch (error) {
-    console.info(error)
-    return null
-  }
+  return fetchRaindrop(`/collection/${id}`)
 }

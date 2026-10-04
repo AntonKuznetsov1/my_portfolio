@@ -14,10 +14,10 @@ export const WritingLink = ({ post }) => {
     <Link
       key={post.slug}
       href={`/writing/${post.slug}`}
-      className={cn('flex flex-col gap-1 rounded-lg p-2', isActive ? 'bg-black text-white' : 'hover:bg-gray-200')}
+      className={cn('flex flex-col gap-1 rounded-lg p-2', isActive ? 'bg-[#29292d] text-[#f0eff1]' : 'hover:bg-[#222225]')}
     >
       <span className="font-medium">{post.title}</span>
-      <span className={cn(isActive ? 'text-slate-400' : 'text-slate-500')}>{date}</span>
+      <span className={cn(isActive ? 'text-[#c1c0c5]' : 'text-[#a1a0a5]')}>{date}</span>
     </Link>
   )
 }

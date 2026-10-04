@@ -1,144 +1,23 @@
 import { isDevelopment } from '@/lib/utils'
 
 async function fetchGraphQL(query, preview = isDevelopment) {
-  const res = await fetch(`https://graphql.contentful.com/content/v1/spaces/${process.env.CONTENTFUL_SPACE_ID}`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${
-        preview ? process.env.CONTENTFUL_PREVIEW_ACCESS_TOKEN : process.env.CONTENTFUL_ACCESS_TOKEN
-      }`
-    },
-    body: JSON.stringify({ query })
-  })
-  if (!res.ok) return undefined
-  return res.json()
-}
+  const accessToken = preview ? process.env.CONTENTFUL_PREVIEW_ACCESS_TOKEN : process.env.CONTENTFUL_ACCESS_TOKEN
+  if (!process.env.CONTENTFUL_SPACE_ID || !accessToken) return undefined
 
-export async function getAllPosts(preview = isDevelopment) {
-  const entries = await fetchGraphQL(
-    `query {
-      postCollection(order: date_DESC, preview: ${preview}) {
-        items {
-          title
-          slug
-          date
-          sys {
-            firstPublishedAt
-            publishedAt
-          }
-        }
-      }
-    }`,
-    preview
-  )
-
-  return entries?.data?.postCollection?.items ?? []
-}
-
-/* export async function getLast3Posts(preview = isDevelopment) {
-  const entries = await fetchGraphQL(
-    `query {
-      postCollection(order: date_DESC, preview: ${preview}, limit: 3) {
-        items {
-          title
-          slug
-          date
-          sys {
-            firstPublishedAt
-          }
-        }
-      }
-    }`,
-    preview
-  )
-
-  return entries?.data?.postCollection?.items ?? []
-} */
-
-export async function getPost(slug, preview = isDevelopment) {
-  const entry = await fetchGraphQL(
-    `query {
-      postCollection(where: { slug: "${slug}" }, preview: ${preview}, limit: 1) {
-        items {
-          title
-          slug
-          date
-          seo {
-            title
-            description
-          }
-          content {
-            json
-            links {
-              assets {
-                block {
-                  sys {
-                    id
-                  }
-                  url
-                  title
-                  width
-                  height
-                  description
-                }
-              }
-              entries {
-                inline {
-                  sys {
-                    id
-                  }
-                  __typename
-                  ... on ContentEmbed {
-                    title
-                    embedUrl
-                    type
-                  }
-                  ... on CodeBlock {
-                    title
-                    language
-                    code
-                  }
-                }
-              }
-            }
-          }
-          sys {
-            firstPublishedAt
-            publishedAt
-          }
-        }
-      }
-    }`,
-    preview
-  )
-
-  return entry?.data?.postCollection?.items?.[0]
-}
-
-export async function getWritingSeo(slug, preview = isDevelopment) {
-  const entry = await fetchGraphQL(
-    `query {
-      postCollection(where: { slug: "${slug}" }, preview: ${preview}, limit: 1) {
-        items {
-          date
-          seo {
-            title
-            description
-            ogImageTitle
-            ogImageSubtitle
-          }
-          sys {
-            firstPublishedAt
-            publishedAt
-          }
-        }
-      }
-    }`,
-    preview
-  )
-
-  return entry?.data?.postCollection?.items?.[0]
+  try {
+    const res = await fetch(`https://graphql.contentful.com/content/v1/spaces/${process.env.CONTENTFUL_SPACE_ID}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`
+      },
+      body: JSON.stringify({ query })
+    })
+    if (!res.ok) return undefined
+    return res.json()
+  } catch {
+    return undefined
+  }
 }
 
 export async function getPageSeo(slug, preview = isDevelopment) {
@@ -175,21 +54,6 @@ export async function getAllPageSlugs(preview = isDevelopment) {
   )
 
   return entries?.data?.pageCollection?.items ?? []
-}
-
-export async function getAllPostSlugs(preview = isDevelopment) {
-  const entries = await fetchGraphQL(
-    `query {
-      postCollection(preview: ${preview}) {
-        items {
-          slug
-        }
-      }
-    }`,
-    preview
-  )
-
-  return entries?.data?.postCollection?.items ?? []
 }
 
 export async function getPage(slug, preview = isDevelopment) {

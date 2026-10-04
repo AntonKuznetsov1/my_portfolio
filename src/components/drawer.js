@@ -34,9 +34,9 @@ export function MobileDrawer() {
       </Button>
       <Drawer.Portal>
         <Drawer.Overlay className="fixed inset-0 bg-black/40" />
-        <Drawer.Content className="fixed bottom-0 left-0 right-0 mt-24 flex h-[80%] flex-col rounded-t-lg bg-gray-100">
-          <div className="flex-1 overflow-y-auto rounded-t-[10px] bg-white p-4">
-            <div className="mx-auto mb-8 h-1.5 w-12 flex-shrink-0 rounded-full bg-zinc-300" />
+        <Drawer.Content className="fixed bottom-0 left-0 right-0 mt-24 flex h-[80%] flex-col rounded-t-lg bg-[#1b1b1e]">
+          <div className="flex-1 overflow-y-auto rounded-t-[10px] bg-[#171719] p-4">
+            <div className="mx-auto mb-8 h-1.5 w-12 flex-shrink-0 rounded-full bg-[#55545a]" />
             <MenuContent />
           </div>
         </Drawer.Content>

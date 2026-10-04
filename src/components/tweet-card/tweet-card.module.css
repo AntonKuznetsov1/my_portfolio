@@ -4,7 +4,7 @@
   --tweet-body-font-size: 1rem;
   --tweet-body-line-height: 1.5rem;
   --tweet-actions-font-weight: 600;
-  --tweet-bg-color: #15202b;
+  --tweet-bg-color: #1b1b1e;
   --tweet-font-color: #e7eae9;
   --tweet-font-color-secondary: #71767b;
   --tweet-color-blue-secondary: #1DA1F2;
@@ -12,7 +12,7 @@
 }
 
 .tweetCard :global(.react-tweet-theme):hover {
-  background-color: #f7fafc;
+  background-color: #222225;
   --tweet-font-color: #0f1419;
   --tweet-color-blue-secondary: #1d9bf0;
   --tweet-verified-blue-color: #1d9bf0;

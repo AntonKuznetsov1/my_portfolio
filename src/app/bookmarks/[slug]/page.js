@@ -18,9 +18,10 @@ async function fetchData(slug) {
   const currentCollection = collections.items
     .filter((collection) => COLLECTION_IDS.includes(collection._id))
     .find((collection) => collection.slug === slug)
+  if (!currentCollection) notFound()
 
   const collection = await getCollection(currentCollection._id)
-  if (!collection) notFound()
+  if (!collection?.item) notFound()
   const raindrops = await getRaindrops(currentCollection._id)
 
   return {
@@ -30,7 +31,7 @@ async function fetchData(slug) {
 }
 
 export default async function CollectionPage({ params }) {
-  const { slug } = params
+  const { slug } = await params
   const { collection, raindrops } = await fetchData(slug)
 
   return (
@@ -47,7 +48,7 @@ export default async function CollectionPage({ params }) {
 }
 
 export async function generateMetadata({ params }) {
-  const { slug } = params
+  const { slug } = await params
   const collections = await getCollections()
   const collection = collections.items
     .filter((collection) => COLLECTION_IDS.includes(collection._id))
@@ -56,7 +57,7 @@ export async function generateMetadata({ params }) {
 
   const siteUrl = `/bookmarks/${collection._id}`
   const seoTitle = `${collection.title} | Bookmarks`
-  const seoDescription = `A curated selection of various handpicked ${collection.title.toLowerCase()} bookmarks by Onur Şuyalçınkaya`
+  const seoDescription = `A curated selection of handpicked ${collection.title.toLowerCase()} bookmarks by Anton Kuznetsov`
 
   return {
     title: seoTitle,

@@ -1,79 +1,91 @@
-import { draftMode } from 'next/headers'
+import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
 import { ScrollArea } from '@/components/scroll-area'
-import { RichText } from '@/components/contentful/rich-text'
+import { Markdown } from '@/components/markdown'
 import { PageTitle } from '@/components/page-title'
 import { FloatingHeader } from '@/components/floating-header'
 import { Views } from '@/components/views'
-import { getPost, getWritingSeo, getAllPostSlugs } from '@/lib/contentful'
-import { getDateTimeFormat, isDevelopment } from '@/lib/utils'
+import { LikeButton } from '@/components/like-button'
+import { MediaGallery, MediaHero } from '@/components/media-gallery'
+import { getPost, getAllPostSlugs } from '@/lib/posts'
+import { getDateTimeFormat } from '@/lib/utils'
+
+export const revalidate = 3600
 
 export async function generateStaticParams() {
-  const allPosts = await getAllPostSlugs()
-  return allPosts.map((post) => ({ slug: post.slug }))
-}
-
-async function fetchData(slug) {
-  const { isEnabled } = draftMode()
-  const data = await getPost(slug, isDevelopment ? true : isEnabled)
-  if (!data) notFound()
-
-  return {
-    data
-  }
+  const posts = await getAllPostSlugs()
+  return posts.map((post) => ({ slug: post.slug }))
 }
 
 export default async function WritingSlug({ params }) {
-  const { slug } = params
-  const { data } = await fetchData(slug)
+  const { slug } = await params
+  const post = await getPost(slug)
 
-  const {
-    title,
-    date,
-    seo: { title: seoTitle, description: seoDescription },
-    content,
-    sys: { firstPublishedAt, publishedAt: updatedAt }
-  } = data
+  if (!post) notFound()
 
-  const postDate = date || firstPublishedAt
-  const dateString = getDateTimeFormat(postDate)
+  const { id, title, description, body, published_at, updated_at, like_count, cover, images } = post
+  const displayTitle = title || 'Untitled'
 
-  const datePublished = new Date(postDate).toISOString()
-  const dateModified = new Date(updatedAt).toISOString()
+  const dateString = getDateTimeFormat(published_at)
+  const datePublished = new Date(published_at).toISOString()
+  const dateModified = new Date(updated_at).toISOString()
+
+  const gallery = images.filter((image) => image.url !== cover?.url)
 
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'BlogPosting',
-    headline: seoTitle,
-    description: seoDescription,
+    headline: displayTitle,
+    ...(description && { description }),
     datePublished,
     dateModified,
     author: {
       '@type': 'Person',
-      name: 'Onur Şuyalçınkaya'
+      name: 'Anton Kuznetsov'
     },
-    url: `https://onur.dev/writing/${slug}`
+    ...(cover?.url && { image: cover.url }),
+    ...(process.env.NEXT_PUBLIC_SITE_URL && { url: `${process.env.NEXT_PUBLIC_SITE_URL}/writing/${slug}` })
   }
 
   return (
     <>
-      <ScrollArea className="flex flex-col bg-white" hasScrollTitle>
-        <FloatingHeader scrollTitle={title} goBackLink="/writing">
+      <ScrollArea className="flex flex-col bg-[#171719]" hasScrollTitle>
+        <FloatingHeader scrollTitle={displayTitle} goBackLink="/writing">
           <Views slug={slug} />
         </FloatingHeader>
         <div className="content-wrapper">
           <article className="content">
             <PageTitle
-              title={title}
+              title={displayTitle}
               subtitle={
-                <time dateTime={postDate} className="text-gray-400">
-                  {dateString}
-                </time>
+                <div className="flex flex-col gap-2">
+                  {description && <p className="mb-0 text-[#a1a0a5]">{description}</p>}
+                  <time dateTime={published_at} className="text-gray-400">
+                    {dateString}
+                  </time>
+                </div>
               }
-              className="mb-6 flex flex-col gap-3"
+              className="mb-6"
             />
-            <RichText content={content} />
+
+            <MediaHero image={cover} className="mb-6" />
+
+            {body && <Markdown>{body}</Markdown>}
+
+            {gallery.length > 0 && (
+              <section className="mt-8">
+                <h2 className="mb-4">Images</h2>
+                <MediaGallery images={gallery} />
+              </section>
+            )}
+
+            <div className="mt-10 flex items-center justify-between gap-4 border-t border-[#343438] pt-6 lg:mt-12">
+              <LikeButton postId={id} initialCount={like_count} />
+              <Link href="/writing" className="link text-sm">
+                More writing
+              </Link>
+            </div>
           </article>
         </div>
       </ScrollArea>
@@ -83,20 +95,13 @@ export default async function WritingSlug({ params }) {
 }
 
 export async function generateMetadata({ params }) {
-  const { slug } = params
-  const seoData = await getWritingSeo(slug)
-  if (!seoData) return null
+  const { slug } = await params
+  const post = await getPost(slug)
+  if (!post) return null
 
-  const {
-    date,
-    seo: { title, description },
-    sys: { firstPublishedAt, publishedAt: updatedAt }
-  } = seoData
-
+  const title = post.title || 'Untitled'
+  const description = post.description || 'An article by Anton Kuznetsov.'
   const siteUrl = `/writing/${slug}`
-  const postDate = date || firstPublishedAt
-  const publishedTime = new Date(postDate).toISOString()
-  const modifiedTime = new Date(updatedAt).toISOString()
 
   return {
     title,
@@ -105,11 +110,10 @@ export async function generateMetadata({ params }) {
       title,
       description,
       type: 'article',
-      publishedTime,
-      ...(updatedAt && {
-        modifiedTime
-      }),
-      url: siteUrl
+      publishedTime: new Date(post.published_at).toISOString(),
+      modifiedTime: new Date(post.updated_at).toISOString(),
+      url: siteUrl,
+      ...(post.cover?.url && { images: [{ url: post.cover.url }] })
     },
     alternates: {
       canonical: siteUrl

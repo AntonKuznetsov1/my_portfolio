@@ -15,8 +15,10 @@ module.exports = {
         reveal: 'reveal 0.7s ease-in-out'
       },
       fontFamily: {
-        sans: ['var(--font-inter)', ...defaultTheme.fontFamily.sans],
-        mono: ['var(--font-jetbrains-mono)', ...defaultTheme.fontFamily.mono]
+        sans: [...defaultTheme.fontFamily.sans],
+        headers: [...defaultTheme.fontFamily.sans],
+        text: [...defaultTheme.fontFamily.sans],
+        mono: [...defaultTheme.fontFamily.mono]
       },
       keyframes: {
         reveal: {

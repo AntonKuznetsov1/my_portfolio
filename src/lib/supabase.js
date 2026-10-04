@@ -1,14 +1,23 @@
 import { createClient } from '@supabase/supabase-js'
 
-export const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY, {
-  auth: {
-    persistSession: false
-  }
-})
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+export const supabase =
+  supabaseUrl && supabaseAnonKey
+    ? createClient(supabaseUrl, supabaseAnonKey, {
+        auth: {
+          persistSession: false
+        }
+      })
+    : null
 export const tableName = 'pages'
 
 export async function getViewCounts() {
-  const { data } = await supabase.from(tableName).select('id, slug, view_count')
+  if (!supabase) return []
+
+  const { data, error } = await supabase.from(tableName).select('id, slug, view_count')
+  if (error || !data) return []
 
   return data.map(({ id, slug, view_count }) => ({
     id,
@@ -18,24 +27,18 @@ export async function getViewCounts() {
 }
 
 export async function upsertViewCount(slug) {
-  const { data } = await supabase.from(tableName).select('id, view_count').eq('slug', slug)
-  const latestData = data[0]
+  if (!supabase || !slug) return { view_count: 0 }
 
-  // Don't upsert view count in development or if no slug is provided
-  if (process.env.NODE_ENV !== 'production' || !slug) {
-    return {
-      view_count: latestData?.view_count || 0
-    }
+  // Don't bump the counter in development
+  if (process.env.NODE_ENV !== 'production') {
+    const { data } = await supabase.from(tableName).select('view_count').eq('slug', slug).limit(1)
+    return { view_count: data?.[0]?.view_count ?? 0 }
   }
 
-  const { data: newOrUpdatedData } = await supabase.from(tableName).upsert({
-    id: latestData?.id,
-    slug: slug,
-    view_count: latestData ? latestData.view_count + 1 : 1,
-    view_count_updated_at: new Date()
-  })
+  // The increment happens in the database. Doing it in the browser meant reading
+  // the row, adding one and upserting, which raced with other visitors and could
+  // not be granted without also handing anon a way to set the number directly.
+  const { data, error } = await supabase.rpc('bump_page_view', { p_slug: slug })
 
-  return {
-    view_count: newOrUpdatedData[0].view_count
-  }
+  return { view_count: error ? 0 : data ?? 0 }
 }

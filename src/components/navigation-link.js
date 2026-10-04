@@ -19,7 +19,7 @@ export const NavigationLink = memo(({ href, label, icon }) => {
         href={href}
         target="_blank"
         rel="noopener noreferrer"
-        className="flex items-center justify-between gap-2 rounded-lg p-2 hover:bg-gray-200"
+        className="flex items-center justify-between gap-2 rounded-lg p-2 text-[#d0cfd2] hover:bg-[#222225] hover:text-[#f0a878]"
       >
         <span className="inline-flex items-center gap-2 font-medium">
           {iconCmp} {label}
@@ -40,7 +40,10 @@ export const NavigationLink = memo(({ href, label, icon }) => {
     <Link
       key={href}
       href={href}
-      className={cn('flex items-center gap-2 rounded-lg p-2', isActive ? 'bg-black text-white' : 'hover:bg-gray-200')}
+      className={cn(
+        'flex items-center gap-2 rounded-lg p-2 transition-colors',
+        isActive ? 'bg-[#29292d] text-[#f0eff1]' : 'text-[#d0cfd2] hover:bg-[#222225] hover:text-[#f0a878]'
+      )}
     >
       {iconCmp}
       <span className={cn('font-medium', isActive && 'text-white')}>{label}</span>

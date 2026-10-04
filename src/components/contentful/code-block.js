@@ -17,12 +17,12 @@ export function CodeBlock({ title, code, language }) {
 
   return (
     <>
-      <div className="flex flex-wrap items-center justify-between gap-2 rounded-t-lg border border-gray-200 bg-gray-50 py-1.5 pl-4 pr-2">
+      <div className="flex flex-wrap items-center justify-between gap-2 rounded-t-lg border border-[#343438] bg-[#1b1b1e] py-1.5 pl-4 pr-2">
         <div className="flex items-center gap-4">
           <span className="inline-flex items-center gap-1.5">
-            <span className="h-4 w-4 rounded-full bg-gray-200" />
-            <span className="h-4 w-4 rounded-full bg-gray-200" />
-            <span className="h-4 w-4 rounded-full bg-gray-200" />
+            <span className="h-4 w-4 rounded-full bg-gray-700" />
+            <span className="h-4 w-4 rounded-full bg-gray-700" />
+            <span className="h-4 w-4 rounded-full bg-gray-700" />
           </span>
           {title && <p className="m-0 text-sm font-medium">{title}</p>}
         </div>

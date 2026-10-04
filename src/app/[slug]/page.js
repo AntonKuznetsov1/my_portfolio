@@ -20,14 +20,14 @@ export async function generateStaticParams() {
 }
 
 async function fetchData(slug) {
-  const { isEnabled } = draftMode()
+  const { isEnabled } = await draftMode()
   const page = await getPage(slug, isDevelopment ? true : isEnabled)
   if (!page) notFound()
   return { page }
 }
 
 export default async function PageSlug({ params }) {
-  const { slug } = params
+  const { slug } = await params
   const {
     page: { title, content }
   } = await fetchData(slug)
@@ -47,7 +47,7 @@ export default async function PageSlug({ params }) {
 }
 
 export async function generateMetadata({ params }) {
-  const { slug } = params
+  const { slug } = await params
   const seoData = await getPageSeo(slug)
   if (!seoData) return null
 

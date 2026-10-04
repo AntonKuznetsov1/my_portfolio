@@ -83,7 +83,7 @@ export const BookmarkList = ({ initialData, id }) => {
           <>
             {isLoading ? (
               <div
-                className="inline-block h-4 w-4 animate-spin rounded-full border-[2px] border-current border-t-transparent text-black"
+                className="inline-block h-4 w-4 animate-spin rounded-full border-[2px] border-current border-t-transparent text-[#f0a878]"
                 role="status"
                 aria-label="loading"
               >
@@ -94,7 +94,7 @@ export const BookmarkList = ({ initialData, id }) => {
                 variant="outline"
                 onClick={handleLoadMore}
                 disabled={isLoading}
-                className="w-full justify-center bg-white"
+                className="w-full justify-center border border-[#3b3b40] bg-[#202023] text-[#dedde0] hover:bg-[#29292d]"
               >
                 Load more
                 <ArrowDownIcon size={16} />

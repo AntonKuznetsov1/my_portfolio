@@ -1,0 +1,8 @@
+NEXTJS_ENV=development
+NEXT_PUBLIC_SITE_URL=https://antonkuz.com
+
+# Cloudflare Workers read these as Worker secrets for local `wrangler dev`.
+# Server-only values must never be prefixed with NEXT_PUBLIC_.
+SUPABASE_SERVICE_ROLE_KEY=
+ADMIN_PASSWORD=
+ADMIN_SESSION_SECRET=

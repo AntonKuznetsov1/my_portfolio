@@ -1,12 +1,16 @@
 import { Suspense } from 'react'
+import Link from 'next/link'
+import { ArrowRightIcon, BriefcaseIcon } from 'lucide-react'
 
 import { ScrollArea } from '@/components/scroll-area'
 import { LoadingSpinner } from '@/components/loading-spinner'
 import { WritingList } from '@/components/writing-list'
 import { FloatingHeader } from '@/components/floating-header'
 import { PageTitle } from '@/components/page-title'
-import { getAllPosts } from '@/lib/contentful'
+import { getAllPosts } from '@/lib/posts'
 import { getViewCounts } from '@/lib/supabase'
+
+export const revalidate = 3600
 
 async function fetchData() {
   const [allPosts, viewCounts] = await Promise.all([getAllPosts(), getViewCounts()])
@@ -18,22 +22,33 @@ export default async function Home() {
 
   return (
     <ScrollArea className="flex flex-col" hasScrollTitle>
-      <FloatingHeader scrollTitle="Onur Şuyalçınkaya" />
+      <FloatingHeader scrollTitle="Anton Kuznetsov" />
       <div className="content-wrapper">
         <div className="content">
-          <PageTitle title="Home" className="lg:hidden" />
-          <p>
-            {`Hi 👋 I'm Onur (meaning "Honour" in English), a software engineer, dj, writer, and minimalist based in Amsterdam,
-          The Netherlands.`}
-          </p>
-          <p>
-            I develop things as a Senior Frontend Software Engineer at Bitvavo. Previously, I worked as a Senior
-            Frontend Software Engineer at heycar, Frontend Software Engineer at Yemeksepeti, Fullstack Software Engineer
-            at Sistas, Mobile Developer at Tanbula, and Specialist at Apple.
-          </p>
+          <PageTitle title="Hi, I’m Anton." className="lg:hidden" />
+          <div className="mb-10">
+            <p className="eyebrow mb-3">Web developer · designer · cybersecurity student · Fredericton, NB</p>
+            <h1 className="mb-5 hidden lg:block">Hi, I’m Anton.</h1>
+            <p className="mb-4">
+              I’m Anton Kuznetsov, a student at Fredericton High School pursuing a career in web development and
+              cybersecurity.
+            </p>
+            <p>
+              I build and design websites, work across the full stack, and have experience delivering client projects and
+              launching websites for companies.
+            </p>
+            <div className="mt-7 flex flex-wrap gap-3">
+              <Link href="/projects" className="button-primary">
+                Explore my projects <BriefcaseIcon size={16} />
+              </Link>
+              <Link href="/contact" className="button-secondary">
+                Reach out to me <ArrowRightIcon size={16} />
+              </Link>
+            </div>
+          </div>
           <Suspense fallback={<LoadingSpinner />}>
-            <h2 className="mb-4 mt-8">Writing</h2>
-            <WritingList items={allPosts} viewCounts={viewCounts} header="Writing" />
+            <h2 className="mb-4 mt-8">My latest article</h2>
+            <WritingList items={allPosts} viewCounts={viewCounts} />
           </Suspense>
         </div>
       </div>

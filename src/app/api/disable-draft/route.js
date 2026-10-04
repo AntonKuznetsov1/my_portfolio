@@ -8,6 +8,7 @@ export async function GET(request) {
     return new Response('Invalid token', { status: 401 })
   }
 
-  draftMode().disable()
+  const draft = await draftMode()
+  draft.disable()
   return new Response('Draft mode is disabled')
 }

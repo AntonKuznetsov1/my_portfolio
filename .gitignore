@@ -1,8 +1,13 @@
 .vscode
-.env
+.env*
+!.env.example
+.dev.vars*
+!.dev.vars.example
 
 # next.js
 /.next/
+/.open-next/
+/.wrangler/
 /out/
 .vercel
 
@@ -10,6 +15,8 @@
 /node_modules
 /.pnp
 .pnp.js
+AGENTS.md
+CLAUDE.md
 
 # production
 /build

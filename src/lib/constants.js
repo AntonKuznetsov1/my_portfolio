@@ -1,68 +1,28 @@
 import {
   GithubIcon,
-  TwitterIcon,
-  LinkedinIcon,
-  InstagramIcon,
-  YoutubeIcon,
+  MailIcon,
   SparklesIcon,
   PencilLineIcon,
   NavigationIcon,
-  Wand2Icon,
-  BookmarkIcon
+  FolderKanbanIcon,
+  CodeIcon
 } from 'lucide-react'
 
 export const PROFILES = {
-  twitter: {
-    title: 'Twitter',
-    username: 'onurschu',
-    url: 'https://twitter.com/intent/user?screen_name=onurschu',
-    icon: <TwitterIcon size={16} />
-  },
   github: {
     title: 'GitHub',
-    url: 'https://github.com/suyalcinkaya',
+    url: 'https://github.com/AntonKuznetsov1',
     icon: <GithubIcon size={16} />
-  },
-  linkedin: {
-    title: 'LinkedIn',
-    url: 'https://www.linkedin.com/in/suyalcinkaya',
-    icon: <LinkedinIcon size={16} />
-  },
-  medium: {
-    title: 'Medium',
-    url: 'https://suyalcinkaya.medium.com'
-  },
-  instagram: {
-    title: 'Instagram',
-    url: 'https://www.instagram.com/jgrmn',
-    icon: <InstagramIcon size={16} />
-  },
-  soundcloud: {
-    title: 'Soundcloud',
-    url: 'https://soundcloud.com/jagerman'
-  },
-  youtube: {
-    title: 'YouTube',
-    url: 'https://www.youtube.com/c/jagermanmusic',
-    icon: <YoutubeIcon size={16} />
-  },
-  bluesky: {
-    title: 'Bluesky',
-    url: 'https://staging.bsky.app/profile/onur.dev'
-  },
-  readcv: {
-    title: 'Read.cv',
-    url: 'https://read.cv/onur'
-  },
-  pinterest: {
-    title: 'Pinterest',
-    url: 'https://nl.pinterest.com/onurschu'
   }
 }
 
 export const COLLECTION_IDS = [
   18259129, 15968768, 23598938, 16949672, 15807896, 15807897, 15969648, 16338467, 15896982, 25589709
 ]
+
+export const SKILLS = ['HTML', 'CSS', 'JavaScript', 'React', 'Next.js', 'Node.js', 'API development', 'UI/UX design']
+
+export const SERVICES = ['Business websites', 'Portfolio websites', 'Landing pages', 'Website redesigns']
 
 export const LINKS = [
   {
@@ -72,7 +32,7 @@ export const LINKS = [
   },
   {
     href: '/writing',
-    label: 'Writing',
+    label: 'Blog3',
     icon: <PencilLineIcon size={16} />
   },
   {
@@ -81,14 +41,19 @@ export const LINKS = [
     icon: <NavigationIcon size={16} />
   },
   {
-    href: '/stack',
-    label: 'Stack',
-    icon: <Wand2Icon size={16} />
+    href: '/projects',
+    label: 'Projects',
+    icon: <FolderKanbanIcon size={16} />
   },
   {
-    href: '/bookmarks',
-    label: 'Bookmarks',
-    icon: <BookmarkIcon size={16} />
+    href: '/skills',
+    label: 'Skills',
+    icon: <CodeIcon size={16} />
+  },
+  {
+    href: '/contact',
+    label: 'Contact',
+    icon: <MailIcon size={16} />
   }
 ]
 

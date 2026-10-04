@@ -26,10 +26,10 @@ export default async function Writing() {
             <Link
               key={collection._id}
               href={`/bookmarks/${collection._id}`}
-              className="flex flex-col gap-1 border-b px-4 py-3 text-sm hover:bg-gray-100"
+              className="flex flex-col gap-1 border-b border-[#343438] px-4 py-3 text-sm hover:bg-[#222225]"
             >
               <span className="font-medium">{collection.title}</span>
-              <span className="text-slate-500">{collection.count} bookmarks</span>
+              <span className="text-slate-400">{collection.count} bookmarks</span>
             </Link>
           )
         })}

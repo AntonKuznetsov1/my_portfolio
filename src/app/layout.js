@@ -1,35 +1,18 @@
 import '@/globals.css'
 import { draftMode } from 'next/headers'
 import Script from 'next/script'
-import { Inter, JetBrains_Mono } from 'next/font/google'
 import { EyeIcon } from 'lucide-react'
 
-import { SideMenu } from '@/components/side-menu'
-import { MenuContent } from '@/components/menu-content'
-import { PROFILES } from '@/lib/constants'
+import { SiteShell } from '@/components/site-shell'
 import { sharedTitle, sharedDescription } from '@/app/shared-metadata'
 
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ['latin'],
-  variable: '--font-jetbrains-mono',
-  display: 'swap',
-  weight: ['variable']
-})
-
-const interFont = Inter({
-  subsets: ['latin'],
-  variable: '--font-inter',
-  display: 'swap'
-})
-
 export default async function RootLayout({ children }) {
-  const { isEnabled } = draftMode()
+  const { isEnabled } = await draftMode()
 
   return (
-    <html lang="en" className={`${interFont.variable} ${jetbrainsMono.variable}`} suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <body suppressHydrationWarning>
-        {/* eslint-disable-next-line react/no-unknown-property */}
-        <main vaul-drawer-wrapper="" className="min-h-screen bg-white">
+        <main vaul-drawer-wrapper="" className="min-h-screen bg-[#171719]">
           {isEnabled && (
             <div className="absolute bottom-0 left-0 right-0 z-50 flex h-12 w-full items-center justify-center bg-green-500 text-center text-sm font-medium text-white">
               <div className="flex items-center gap-2">
@@ -38,25 +21,22 @@ export default async function RootLayout({ children }) {
               </div>
             </div>
           )}
-          <div className="lg:flex">
-            <SideMenu className="relative hidden lg:flex">
-              <MenuContent />
-            </SideMenu>
-            <div className="flex flex-1">{children}</div>
-          </div>
+          <SiteShell>{children}</SiteShell>
         </main>
-        <Script
-          src="https://unpkg.com/@tinybirdco/flock.js"
-          data-host="https://api.tinybird.co"
-          data-token={process.env.NEXT_PUBLIC_TINYBIRD_TOKEN}
-        />
+        {process.env.NEXT_PUBLIC_TINYBIRD_TOKEN && (
+          <Script
+            src="https://unpkg.com/@tinybirdco/flock.js"
+            data-host="https://api.tinybird.co"
+            data-token={process.env.NEXT_PUBLIC_TINYBIRD_TOKEN}
+          />
+        )}
       </body>
     </html>
   )
 }
 
 export const metadata = {
-  metadataBase: new URL('https://onur.dev'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://antonkuz.com'),
   robots: {
     index: true,
     follow: true
@@ -78,21 +58,20 @@ export const metadata = {
     siteName: sharedTitle,
     locale: 'en_IE'
   },
-  themeColor: '#ffffff',
   alternates: {
     canonical: '/'
   },
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 1
-  },
   twitter: {
-    card: 'summary_large_image',
-    site: `@${PROFILES.twitter.username}`,
-    creator: `@${PROFILES.twitter.username}`
+    card: 'summary_large_image'
   },
   other: {
     pinterest: 'nopin'
   }
+}
+
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  themeColor: '#171719'
 }

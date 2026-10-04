@@ -11,6 +11,7 @@ export async function GET(request) {
 
   const slug = searchParams.get('slug') ?? '/'
 
-  draftMode().enable()
+  const draft = await draftMode()
+  draft.enable()
   redirect(slug)
 }

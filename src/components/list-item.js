@@ -13,10 +13,10 @@ export const ListItem = ({ title, description, path }) => {
     <Link
       key={path}
       href={path}
-      className={cn('flex flex-col gap-1 rounded-lg p-2', isActive ? 'bg-black' : 'hover:bg-gray-200')}
+      className={cn('flex flex-col gap-1 rounded-lg p-2', isActive ? 'bg-[#29292d]' : 'hover:bg-[#222225]')}
     >
-      <span className={cn('font-medium', isActive && 'text-white')}>{title}</span>
-      {description && <span className={cn(isActive ? 'text-slate-300' : 'text-slate-500')}>{description}</span>}
+      <span className={cn('font-normal text-[#d0cfd2]', isActive && 'text-[#f0eff1]')}>{title}</span>
+      {description && <span className={cn(isActive ? 'text-[#c1c0c5]' : 'text-[#a1a0a5]')}>{description}</span>}
     </Link>
   )
 }

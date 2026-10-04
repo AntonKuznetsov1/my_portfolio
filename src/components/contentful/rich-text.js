@@ -15,7 +15,7 @@ function options(links) {
 
   return {
     renderMark: {
-      [MARKS.BOLD]: (text) => <span className="font-semibold text-black">{text}</span>,
+      [MARKS.BOLD]: (text) => <span className="font-semibold text-white">{text}</span>,
       [MARKS.ITALIC]: (text) => <span className="italic">{text}</span>,
       [MARKS.CODE]: (text) => <code className="inline-code">{text}</code>
     },
@@ -56,7 +56,7 @@ function options(links) {
       ),
       [BLOCKS.LIST_ITEM]: (_, children) => <li>{children}</li>,
       [BLOCKS.QUOTE]: (_, children) => (
-        <blockquote className="mb-4 rounded-r-lg border-l-2 border-gray-200 px-4 font-medium">{children}</blockquote>
+        <blockquote className="mb-4 rounded-r-lg border-l-2 border-[#3a414d] px-4 font-medium">{children}</blockquote>
       ),
       [BLOCKS.EMBEDDED_ASSET]: (node) => {
         const asset = findAsset(node.data.target.sys.id)
@@ -69,10 +69,10 @@ function options(links) {
               width={asset.width || 400}
               alt={asset.description}
               loading="lazy"
-              className="animate-reveal border border-gray-100"
+              className="animate-reveal border border-[#343438]"
             />
             {asset.description && (
-              <figcaption className="text-center text-xs font-light text-gray-500">{asset.description}</figcaption>
+              <figcaption className="text-center text-xs font-light text-gray-400">{asset.description}</figcaption>
             )}
           </figure>
         )

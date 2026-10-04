@@ -2,6 +2,10 @@ import ReactMarkdown from 'markdown-to-jsx'
 
 import { Link } from '@/components/link'
 
+// markdown-to-jsx hands through protocol-relative URLs as "//host/image.png".
+// Absolute URLs must be left alone, otherwise they end up as "https://https://…".
+const resolveSrc = (src = '') => (src.startsWith('//') ? `https:${src}` : src)
+
 export const Markdown = ({ options, ...rest }) => {
   return (
     <ReactMarkdown
@@ -15,7 +19,7 @@ export const Markdown = ({ options, ...rest }) => {
             <span className="mt-2 flex overflow-hidden rounded-xl">
               <img
                 alt={alt}
-                src={`https:${src}`}
+                src={resolveSrc(src)}
                 width={400}
                 height={300}
                 loading="lazy"

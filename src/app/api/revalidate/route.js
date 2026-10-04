@@ -1,14 +1,12 @@
 import { NextResponse } from 'next/server'
 import { revalidatePath } from 'next/cache'
 
-export const runtime = 'edge'
-
-export async function GET(request, response) {
+export async function GET(request) {
   const { searchParams } = new URL(request.url)
   const secret = searchParams.get('secret')
 
   if (secret !== process.env.NEXT_REVALIDATE_SECRET) {
-    return response.status(401).json({ message: 'Invalid token' })
+    return NextResponse.json({ message: 'Invalid token' }, { status: 401 })
   }
 
   const path = request.nextUrl.searchParams.get('path') || '/'

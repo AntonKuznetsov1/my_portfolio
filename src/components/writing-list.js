@@ -15,6 +15,17 @@ const dateWithMonthAndYearFormatter = Intl.DateTimeFormat('en-US', {
 })
 
 export const WritingList = ({ items, viewCounts }) => {
+  if (!items?.length) {
+    return (
+      <div className="rounded-xl border border-dashed border-[#3b3b40] bg-[#1b1b1e] px-5 py-6">
+        <p className="mb-1 font-sans text-sm font-medium text-[#f4f3f5]">Your writing will appear here.</p>
+        <p className="mb-0 text-sm text-[#a1a0a5]">
+          Nothing is published yet. Articles added in the admin area show up on this page.
+        </p>
+      </div>
+    )
+  }
+
   const itemsEntriesByYear = items.reduce((acc, item) => {
     const year = new Date(item.date).getFullYear()
 
@@ -30,7 +41,7 @@ export const WritingList = ({ items, viewCounts }) => {
 
   return (
     <div className="text-sm">
-      <header className="grid grid-cols-6 py-4 text-gray-500">
+      <header className="grid grid-cols-6 py-4 text-gray-400">
         <span className="col-span-1 hidden text-left md:grid">Year</span>
         <span className="col-span-6 md:col-span-5">
           <span className="grid grid-cols-4 items-center md:grid-cols-8">
@@ -57,17 +68,17 @@ export const WritingList = ({ items, viewCounts }) => {
                 const formattedViews = new Intl.NumberFormat('en-US').format(views)
 
                 return (
-                  <li key={slug} className="grid grid-cols-6 p-0 group-hover:text-gray-300">
+                  <li key={slug} className="grid grid-cols-6 p-0 group-hover:text-gray-500">
                     <span
                       className={cn(
-                        'pointer-events-none col-span-1 hidden items-center text-gray-500 md:grid',
-                        itemIndex === 0 && 'border-t border-gray-200'
+                        'pointer-events-none col-span-1 hidden items-center text-gray-400 md:grid',
+                        itemIndex === 0 && 'border-t border-[#343438]'
                       )}
                     >
                       {itemIndex === 0 ? year : ''}
                     </span>
-                    <Link href={`/writing/${slug}`} className="col-span-6 hover:text-black md:col-span-5">
-                      <span className="grid grid-cols-4 items-center gap-2 border-t border-gray-200 py-4 md:grid-cols-8">
+                    <Link href={`/writing/${slug}`} className="col-span-6 hover:text-white md:col-span-5">
+                      <span className="grid grid-cols-4 items-center gap-2 border-t border-[#343438] py-4 md:grid-cols-8">
                         <span className="col-span-1 text-left">
                           <time dateTime={date} className="hidden md:block">
                             {dateWithDayAndMonth}
