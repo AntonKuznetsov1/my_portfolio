@@ -5,6 +5,7 @@ import { EyeIcon } from 'lucide-react'
 
 import { SiteShell } from '@/components/site-shell'
 import { sharedTitle, sharedDescription } from '@/app/shared-metadata'
+import { SITE_URL } from '@/lib/site-url'
 
 export default async function RootLayout({ children }) {
   const { isEnabled } = await draftMode()
@@ -36,7 +37,7 @@ export default async function RootLayout({ children }) {
 }
 
 export const metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://antonkuz.com'),
+  metadataBase: new URL(SITE_URL),
   robots: {
     index: true,
     follow: true

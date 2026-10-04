@@ -1,5 +1,7 @@
 # Local development and free deployment
 
+For the one-time production launch checklist, see [LAUNCH.md](LAUNCH.md).
+
 ## Local development
 
 From this project directory:
@@ -123,6 +125,10 @@ Authenticate Wrangler once:
 ```sh
 npx wrangler login
 ```
+
+The three server secrets have to exist on the Worker before the admin works. Set them with `npx wrangler secret put`,
+and read [LAUNCH.md](LAUNCH.md) first: OpenNext bakes `.env.local` into the Worker as fallbacks, so a secret you forget
+to set silently falls back to the development value instead of failing loudly.
 
 Then deploy to your Cloudflare account:
 
