@@ -12,8 +12,8 @@ export const metadata = {
 /** Unlisted entry point. Nothing on the public site links here. */
 export default function AdminLoginPage() {
   return (
-    <div className="flex min-h-dynamic-screen flex-col items-center justify-center bg-[#171719] px-6 py-20">
-      <div className="w-full max-w-md">
+    <div className="flex h-dynamic-screen flex-col items-center overflow-y-auto bg-[#171719] px-6 py-20">
+      <div className="my-auto w-full max-w-md">
         <div className="mb-6 flex items-center gap-3">
           <span className="flex size-10 shrink-0 items-center justify-center rounded-full border border-[#39393e] bg-[#222225] font-medium text-[#f0a878] shadow-sm">
             AK

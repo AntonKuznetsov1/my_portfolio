@@ -2,7 +2,6 @@
 
 import { memo, useEffect, useState } from 'react'
 import Link from 'next/link'
-import Balancer from 'react-wrap-balancer'
 import { ArrowLeftIcon } from 'lucide-react'
 
 import { MobileDrawer } from '@/components/drawer'
@@ -60,11 +59,7 @@ export const FloatingHeader = memo(({ scrollTitle, title, goBackLink, children }
                 {scrollTitle}
               </span>
             )}
-            {title && (
-              <Balancer ratio={0.35}>
-                <span className="line-clamp-2 font-bold">{title}</span>
-              </Balancer>
-            )}
+            {title && <span className="line-clamp-2 text-balance font-bold">{title}</span>}
           </div>
           <div className="flex min-w-[50px] justify-end">{children}</div>
         </div>

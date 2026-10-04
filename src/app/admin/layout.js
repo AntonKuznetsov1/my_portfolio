@@ -14,8 +14,8 @@ export const metadata = {
 export default function AdminLayout({ children }) {
   if (!isAdminEnabled() || !isSupabaseConfigured()) {
     return (
-      <div className="flex min-h-dynamic-screen flex-col items-center justify-center gap-4 bg-[#171719] px-6 py-20">
-        <div className="mx-auto w-full max-w-lg rounded-xl border border-dashed border-[#3b3b40] bg-[#1b1b1e] px-5 py-6 text-sm text-[#a1a0a5]">
+      <div className="flex h-dynamic-screen flex-col items-center gap-4 overflow-y-auto bg-[#171719] px-6 py-20">
+        <div className="mx-auto my-auto w-full max-w-lg rounded-xl border border-dashed border-[#3b3b40] bg-[#1b1b1e] px-5 py-6 text-sm text-[#a1a0a5]">
           <p className="mb-2 font-sans text-sm font-medium text-[#f4f3f5]">The admin area is not configured.</p>
           <p className="mb-0">
             Set <code className="inline-code">ADMIN_PASSWORD</code> and{' '}
