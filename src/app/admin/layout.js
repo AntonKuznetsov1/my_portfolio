@@ -1,6 +1,17 @@
 import { isAdminEnabled } from '@/lib/admin-auth'
 import { isSupabaseConfigured } from '@/lib/admin-supabase'
 
+/**
+ * Every admin route renders per request. Server-only env values are empty at
+ * build time (they are Worker bindings, not baked into the bundle), so
+ * `isAdminEnabled()` was false while prerendering and `getSession()` returned
+ * before ever touching `cookies()`. Next therefore classified /admin as static,
+ * then threw "Page changed from static to dynamic at runtime, reason: cookies"
+ * on the first real request. Forcing dynamic keeps the classification stable
+ * and lets the layout read the bindings that actually exist.
+ */
+export const dynamic = 'force-dynamic'
+
 export const metadata = {
   title: 'Admin',
   robots: { index: false, follow: false, nocache: true }

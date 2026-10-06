@@ -94,8 +94,8 @@ For Cloudflare, set `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KE
 Variables and Secrets**, then redeploy. The anon key is designed to be public; database access is protected by RLS.
 
 Because `NEXT_PUBLIC_` values can be embedded into the Next.js build, also set those values in Cloudflare's build
-environment before deployment. Set `NEXT_PUBLIC_SITE_URL=https://antonkuz.com` there as well. The portfolio metadata is
-now configured for that domain.
+environment before deployment. Set `NEXT_PUBLIC_SITE_URL=https://portfolio.antonkuz.com` there as well. The portfolio
+metadata is now configured for that domain.
 
 ## Optional email notifications
 
@@ -136,8 +136,9 @@ Then deploy to your Cloudflare account:
 npm run deploy:cloudflare
 ```
 
-In Cloudflare, add `antonkuz.com` as a custom domain for the Worker and complete the DNS/TLS prompts. A custom domain
-name itself is usually paid; the Worker hosting and TLS are free within Cloudflare's current free-tier quotas.
+In Cloudflare, the Worker's custom domain `portfolio.antonkuz.com` is attached and is the production origin. The apex
+`antonkuz.com` can be attached the same way if it should serve the same site. Cloudflare provisions TLS automatically;
+the Worker hosting and TLS are free within Cloudflare's current free-tier quotas.
 
 Alternatively, connect the GitHub repository to Cloudflare Workers Builds and use the same build setup. Set the Supabase
 and optional Resend values in the Cloudflare dashboard before deploying. No paid Render service is required.

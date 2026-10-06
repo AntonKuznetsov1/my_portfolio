@@ -4,12 +4,12 @@ module.exports = async () => {
     initOpenNextCloudflareForDev()
   }
 
-  return {
-    reactStrictMode: true,
-    trailingSlash: false,
-    turbopack: {
-      root: __dirname
-    },
+return {
+      reactStrictMode: true,
+      trailingSlash: false,
+      turbopack: {
+        root: __dirname
+      },
     images: {
       remotePatterns: [
         { protocol: 'https', hostname: 'images.ctfassets.net' },

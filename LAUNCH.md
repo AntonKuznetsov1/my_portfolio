@@ -161,17 +161,17 @@ Check all of these:
 ## Step 9 — Attach the custom domain
 
 1. Cloudflare dashboard → **Workers & Pages → anton-portfolio → Settings → Domains & Routes**.
-2. **Add Custom Domain** → `antonkuz.com`.
+2. **Add Custom Domain** → `portfolio.antonkuz.com` (production origin).
 3. Cloudflare creates the DNS record and provisions TLS automatically. Usually a minute or two.
-4. Optionally add `www.antonkuz.com` as a second custom domain.
+4. Optionally add `antonkuz.com` and `www.antonkuz.com` as extra custom domains.
 
-A registered domain is not free, but Worker hosting and TLS on it are within Cloudflare's free tier. If the domain is
-registered elsewhere, add the nameservers Cloudflare assigns.
+A registered domain is not free, but Worker hosting and TLS on it are within Cloudflare's free tier. The zone's
+nameservers must point at Cloudflare (the domain was added in the dashboard and the registrar updated).
 
 Verify after DNS propagates:
 
 ```sh
-curl -sI https://antonkuz.com | head -20
+curl -sI https://portfolio.antonkuz.com | head -20
 ```
 
 ## Step 10 — Housekeeping

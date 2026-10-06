@@ -52,7 +52,7 @@ function toHtml({ name, email, message }) {
 <html>
   <body style="margin:0;padding:24px;background:#f4f4f5;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
     <div style="max-width:560px;margin:0 auto;background:#fff;border-radius:12px;padding:24px;">
-      <p style="margin:0 0 16px;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;color:#88878d;">New message from antonkuz.com</p>
+      <p style="margin:0 0 16px;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;color:#88878d;">New message from portfolio.antonkuz.com</p>
       <table style="width:100%;border-collapse:collapse;font-size:14px;color:#27272a;">
         <tr><td style="padding:8px 0;color:#71717a;width:80px;vertical-align:top;">Name</td><td style="padding:8px 0;font-weight:600;">${escapeHtml(
           name
@@ -86,8 +86,9 @@ export async function sendContactEmail({ name, email, message }) {
     return null
   }
 
-  // Imported lazily so a build without the SMTP secrets, and any non-Worker
-  // runtime, never pays for loading it.
+  // Bundled through esbuild by OpenNext so the ESM import of
+  // cloudflare:sockets survives. A static import would make Turbopack load the
+  // module during page-data collection and fail the build.
   const { WorkerMailer } = await import('worker-mailer')
 
   try {
