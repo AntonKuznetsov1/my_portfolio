@@ -1,7 +1,10 @@
 const RAINDROP_API_URL = 'https://api.raindrop.io/rest/v1'
-const accessToken = process.env.RAINDROP_ACCESS_TOKEN
 
 async function fetchRaindrop(path) {
+  // Read inside the function, not at module scope. Worker runtime bindings are
+  // applied to process.env after the bundle is evaluated, so a module-scope read
+  // would always come back empty. See src/lib/admin-supabase.js.
+  const accessToken = process.env.RAINDROP_ACCESS_TOKEN
   if (!accessToken) return null
 
   try {

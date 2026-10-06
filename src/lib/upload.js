@@ -1,4 +1,4 @@
-import { adminSupabase } from '@/lib/admin-supabase'
+import { getAdminSupabase } from '@/lib/admin-supabase'
 
 export const BUCKET_NAME = 'portfolio'
 
@@ -28,7 +28,8 @@ export function getImageExtension(file) {
  * key is the only thing that can write to this bucket.
  */
 export async function uploadImage(file, scope, recordId) {
-  if (!adminSupabase) return { error: 'Supabase is not configured.' }
+  const client = getAdminSupabase()
+  if (!client) return { error: 'Supabase is not configured.' }
   if (!isAcceptedImage(file)) return { error: 'Only JPEG, PNG, WebP, AVIF or GIF images are supported.' }
   if (file.size > MAX_IMAGE_BYTES) return { error: 'Images must be smaller than 5 MB.' }
 
@@ -36,7 +37,7 @@ export async function uploadImage(file, scope, recordId) {
   const name = `${crypto.randomUUID()}.${getImageExtension(file)}`
   const path = `${scope}/${safeId}/${name}`
 
-  const { error } = await adminSupabase.storage.from(BUCKET_NAME).upload(path, file, {
+  const { error } = await client.storage.from(BUCKET_NAME).upload(path, file, {
     cacheControl: '31536000',
     contentType: file.type,
     upsert: false
@@ -44,13 +45,14 @@ export async function uploadImage(file, scope, recordId) {
 
   if (error) return { error: 'The image could not be uploaded.' }
 
-  const { data } = adminSupabase.storage.from(BUCKET_NAME).getPublicUrl(path)
+  const { data } = client.storage.from(BUCKET_NAME).getPublicUrl(path)
   return { url: data.publicUrl, path }
 }
 
 /** Removes a previously uploaded file. Safe to call with an already-deleted path. */
 export async function removeImage(path) {
-  if (!adminSupabase || !path) return
+  const client = getAdminSupabase()
+  if (!client || !path) return
 
-  await adminSupabase.storage.from(BUCKET_NAME).remove([path])
+  await client.storage.from(BUCKET_NAME).remove([path])
 }

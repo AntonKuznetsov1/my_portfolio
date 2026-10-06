@@ -13,7 +13,7 @@ import {
   sessionCookie,
   verifyPassword
 } from '@/lib/admin-auth'
-import { adminSupabase, isSupabaseConfigured } from '@/lib/admin-supabase'
+import { getAdminSupabase, isSupabaseConfigured } from '@/lib/admin-supabase'
 import { removeImage } from '@/lib/upload'
 import { uniqueSlug } from '@/lib/utils'
 
@@ -110,7 +110,7 @@ function normalizeImages(images) {
  * purging first meant a failed save could destroy images the post still needed.
  */
 async function syncImages({ table, column, recordId, images }) {
-  const { data: existing, error: readError } = await adminSupabase
+  const { data: existing, error: readError } = await getAdminSupabase()
     .from(table)
     .select('id, url, path, alt, is_cover, position')
     .eq(column, recordId)
@@ -154,17 +154,17 @@ async function syncImages({ table, column, recordId, images }) {
   }
 
   if (inserts.length) {
-    const { error } = await adminSupabase.from(table).insert(inserts)
+    const { error } = await getAdminSupabase().from(table).insert(inserts)
     if (error) return { error: 'The images could not be saved.' }
   }
 
   if (updates.length) {
-    const { error } = await adminSupabase.from(table).upsert(updates)
+    const { error } = await getAdminSupabase().from(table).upsert(updates)
     if (error) return { error: 'The images could not be saved.' }
   }
 
   if (removed.length) {
-    const { error } = await adminSupabase
+    const { error } = await getAdminSupabase()
       .from(table)
       .delete()
       .in(
@@ -243,7 +243,7 @@ export async function savePost(payload) {
   }
 
   if (payload?.id) {
-    const { data: existing, error: lookupError } = await adminSupabase
+    const { data: existing, error: lookupError } = await getAdminSupabase()
       .from('posts')
       .select('id, slug')
       .eq('id', payload.id)
@@ -251,7 +251,7 @@ export async function savePost(payload) {
 
     if (lookupError || !existing?.length) return { ok: false, error: 'That post no longer exists.' }
 
-    const { error } = await adminSupabase
+    const { error } = await getAdminSupabase()
       .from('posts')
       .update({ title: title || null, description: description || null, body: body || null, updated_at: new Date() })
       .eq('id', payload.id)
@@ -270,13 +270,13 @@ export async function savePost(payload) {
     return { ok: true, slug: existing[0].slug }
   }
 
-  const { data: slugs } = await adminSupabase.from('posts').select('slug')
+  const { data: slugs } = await getAdminSupabase().from('posts').select('slug')
   const slug = uniqueSlug(
     title || description || body.slice(0, 40) || 'post',
     (slugs ?? []).map((row) => row.slug)
   )
 
-  const { data: created, error } = await adminSupabase
+  const { data: created, error } = await getAdminSupabase()
     .from('posts')
     .insert({ slug, title: title || null, description: description || null, body: body || null })
     .select('id')
@@ -298,14 +298,14 @@ export async function deletePost(id) {
   const guard = await requireSession()
   if (!guard?.ok) return guard
 
-  const { data: existing } = await adminSupabase.from('posts').select('id, slug').eq('id', id).limit(1)
+  const { data: existing } = await getAdminSupabase().from('posts').select('id, slug').eq('id', id).limit(1)
   if (!existing?.length) return { ok: false, error: 'That post no longer exists.' }
 
   // Read the image keys first, but delete the row before touching storage: the
   // rows cascade with the post, so a failed delete must not leave the files gone.
-  const { data: stored } = await adminSupabase.from('post_images').select('url, path').eq('post_id', id)
+  const { data: stored } = await getAdminSupabase().from('post_images').select('url, path').eq('post_id', id)
 
-  const { error } = await adminSupabase.from('posts').delete().eq('id', id)
+  const { error } = await getAdminSupabase().from('posts').delete().eq('id', id)
   if (error) return { ok: false, error: 'The post could not be deleted.' }
 
   await purgeImages(stored ?? [])
@@ -337,11 +337,15 @@ export async function saveProject(payload) {
   if (githubUrl && !isHttpUrl(githubUrl)) return { ok: false, error: 'The GitHub link needs to be a full URL.' }
 
   if (payload?.id) {
-    const { data: existing } = await adminSupabase.from('projects').select('id, slug').eq('id', payload.id).limit(1)
+    const { data: existing } = await getAdminSupabase()
+      .from('projects')
+      .select('id, slug')
+      .eq('id', payload.id)
+      .limit(1)
 
     if (!existing?.length) return { ok: false, error: 'That project no longer exists.' }
 
-    const { error } = await adminSupabase
+    const { error } = await getAdminSupabase()
       .from('projects')
       .update({
         title: title || null,
@@ -371,16 +375,16 @@ export async function saveProject(payload) {
     return { ok: true, slug: existing[0].slug }
   }
 
-  const { data: slugs } = await adminSupabase.from('projects').select('slug')
+  const { data: slugs } = await getAdminSupabase().from('projects').select('slug')
   const slug = uniqueSlug(
     title || projectUrl,
     (slugs ?? []).map((row) => row.slug)
   )
 
-  const { data: existingPositions } = await adminSupabase.from('projects').select('position')
+  const { data: existingPositions } = await getAdminSupabase().from('projects').select('position')
   const position = (existingPositions ?? []).reduce((max, row) => Math.max(max, row.position ?? 0), 0) + 1
 
-  const { data: created, error } = await adminSupabase
+  const { data: created, error } = await getAdminSupabase()
     .from('projects')
     .insert({
       slug,
@@ -414,12 +418,12 @@ export async function deleteProject(id) {
   const guard = await requireSession()
   if (!guard?.ok) return guard
 
-  const { data: existing } = await adminSupabase.from('projects').select('id, slug').eq('id', id).limit(1)
+  const { data: existing } = await getAdminSupabase().from('projects').select('id, slug').eq('id', id).limit(1)
   if (!existing?.length) return { ok: false, error: 'That project no longer exists.' }
 
-  const { data: stored } = await adminSupabase.from('project_images').select('url, path').eq('project_id', id)
+  const { data: stored } = await getAdminSupabase().from('project_images').select('url, path').eq('project_id', id)
 
-  const { error } = await adminSupabase.from('projects').delete().eq('id', id)
+  const { error } = await getAdminSupabase().from('projects').delete().eq('id', id)
   if (error) return { ok: false, error: 'The project could not be deleted.' }
 
   await purgeImages(stored ?? [])
@@ -435,7 +439,7 @@ export async function getPostForAdmin(id) {
   const guard = await requireSession()
   if (!guard?.ok) return null
 
-  const { data } = await adminSupabase
+  const { data } = await getAdminSupabase()
     .from('posts')
     .select(
       'id, slug, title, description, body, published_at, like_count, post_images(url, path, alt, is_cover, position)'
@@ -454,7 +458,7 @@ export async function getProjectForAdmin(id) {
   const guard = await requireSession()
   if (!guard?.ok) return null
 
-  const { data } = await adminSupabase
+  const { data } = await getAdminSupabase()
     .from('projects')
     .select(
       'id, slug, title, description, project_url, github_url, price, published_at, position, project_images(url, path, alt, is_cover, position)'
@@ -474,12 +478,15 @@ export async function getAdminOverview() {
   const guard = await requireSession()
   if (!guard?.ok) return { posts: [], projects: [], configured: false }
 
+  const client = getAdminSupabase()
+  if (!client) return { posts: [], projects: [], configured: false }
+
   const [posts, projects] = await Promise.all([
-    adminSupabase
+    client
       .from('posts')
       .select('id, slug, title, published_at, like_count, post_images(id)')
       .order('published_at', { ascending: false }),
-    adminSupabase
+    client
       .from('projects')
       .select('id, slug, title, price, published_at, project_images(id)')
       .order('position', { ascending: true })
