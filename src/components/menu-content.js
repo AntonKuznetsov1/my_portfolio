@@ -17,7 +17,7 @@ export const MenuContent = () => {
                 alt="Akcadag logo"
                 width={40}
                 height={40}
-                className="size-full object-contain p-1"
+                className="size-full object-cover p-0"
               />
             </span>
           <div className="flex flex-col">
