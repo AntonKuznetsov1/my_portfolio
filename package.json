@@ -10,7 +10,7 @@
     "dev": "next dev",
     "generate:og": "node scripts/generate-og.mjs",
     "prebuild": "node scripts/generate-og.mjs || echo \"warning: reusing committed OG images\"",
-    "postinstall": "node scripts/patch-opennext-og-worker.mjs",
+    "postinstall": "node scripts/patch-opennext-og-worker.mjs && node scripts/patch-opennext-cloudflare-sockets.mjs",
     "build": "next build",
     "start": "next start",
     "preview:cloudflare": "NEXT_PRIVATE_STANDALONE=true NEXT_PRIVATE_OUTPUT_TRACE_ROOT=\"$(npm prefix)\" npm run build && opennextjs-cloudflare build --skipNextBuild && opennextjs-cloudflare preview",
@@ -45,7 +45,8 @@
     "react-tweet": "^3.0.3",
     "tailwind-merge": "^1.14.0",
     "tailwindcss-animate": "^1.0.6",
-    "vaul": "^0.6.5"
+    "vaul": "^0.6.5",
+    "worker-mailer": "^1.2.1"
   },
   "devDependencies": {
     "@opennextjs/cloudflare": "^1.20.7",

@@ -28,7 +28,7 @@ export function ContactForm() {
 
       form.reset()
       setStatus('sent')
-      setMessage('Thanks! Your message has been sent.')
+      setMessage(result.warning || 'Thanks! Your message has been sent.')
     } catch (error) {
       setStatus('error')
       setMessage(error.message || 'Your message could not be sent. Please try again.')

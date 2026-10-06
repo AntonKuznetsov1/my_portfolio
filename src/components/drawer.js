@@ -3,7 +3,7 @@
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Drawer } from 'vaul'
-import { CommandIcon } from 'lucide-react'
+import { MenuIcon } from 'lucide-react'
 
 import { MenuContent } from '@/components/menu-content'
 import { Button } from '@/components/ui/button.jsx'
@@ -29,7 +29,7 @@ export function MobileDrawer() {
     <Drawer.Root shouldScaleBackground onClose={resetDrawer}>
       <Button variant="ghost" size="icon" title="Toggle drawer" asChild>
         <Drawer.Trigger>
-          <CommandIcon size={16} />
+          <MenuIcon size={16} />
         </Drawer.Trigger>
       </Button>
       <Drawer.Portal>

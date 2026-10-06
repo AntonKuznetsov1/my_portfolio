@@ -7,11 +7,48 @@ import { PageTitle } from '@/components/page-title'
 import { GradientBg3 } from '@/components/gradient-bg'
 import { getAllLogbook, getPageSeo } from '@/lib/contentful'
 
+/**
+ * Shown until the logbook is populated from Contentful. These are plain
+ * objects in the shape getAllLogbook returns, so the page renders them through
+ * the same mapping and the switch to real entries changes nothing but the data.
+ *
+ * Descriptions are written to exercise the layout rather than to be read: one
+ * short line, one long paragraph, and one with a list and a link, at very
+ * different lengths. That way the timeline is checked against the worst cases
+ * before any real content exists. Keep the shape, not the wording.
+ */
+const PLACEHOLDER_LOGBOOK = [
+  {
+    title: 'First steps',
+    date: '2024-02-12',
+    description: 'Where the journey begins.'
+  },
+  {
+    title: 'Learning the fundamentals',
+    date: '2024-06-03',
+    description:
+      'HTML, CSS and JavaScript, slowly and then all at once. This entry is deliberately long so the timeline can be checked against a full paragraph of copy rather than a neat single sentence, because real writing never stays tidy for long.'
+  },
+  {
+    title: 'Building for the web',
+    date: '2025-01-20',
+    description:
+      'Moving from static pages to real applications.\n\n- Interfaces that hold up on a phone\n- Data that survives a reload\n- Details that most people never notice\n\nMore at [the projects page](/projects).'
+  },
+  {
+    title: 'Working with people',
+    date: '2025-09-08',
+    description: 'Turning a rough idea into something someone else can actually use.'
+  }
+]
+
 async function fetchData() {
   const allLogbook = await getAllLogbook()
 
+  const source = allLogbook?.length ? allLogbook : PLACEHOLDER_LOGBOOK
+
   const mappedLogbook = []
-  allLogbook.map((log) => {
+  source.map((log) => {
     const year = new Date(log.date).getFullYear()
     const existingYear = mappedLogbook.find((item) => item?.year === year)
     if (!existingYear) mappedLogbook.push({ year, logs: [log] })

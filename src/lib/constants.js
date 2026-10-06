@@ -1,5 +1,8 @@
 import {
   GithubIcon,
+  LinkedinIcon,
+  InstagramIcon,
+  XIcon,
   MailIcon,
   SparklesIcon,
   PencilLineIcon,
@@ -13,6 +16,21 @@ export const PROFILES = {
     title: 'GitHub',
     url: 'https://github.com/AntonKuznetsov1',
     icon: <GithubIcon size={16} />
+  },
+  linkedin: {
+    title: 'LinkedIn',
+    url: 'https://www.linkedin.com/in/anton-kuznetsov-1b6626391',
+    icon: <LinkedinIcon size={16} />
+  },
+  instagram: {
+    title: 'Instagram',
+    url: 'https://www.instagram.com/antonkuznetsov200/',
+    icon: <InstagramIcon size={16} />
+  },
+  x: {
+    title: 'X',
+    url: 'https://x.com/AntonKuzne7656',
+    icon: <XIcon size={16} />
   }
 }
 

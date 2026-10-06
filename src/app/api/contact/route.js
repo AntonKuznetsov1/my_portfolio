@@ -1,5 +1,7 @@
 import { createClient } from '@supabase/supabase-js'
 
+import { sendContactEmail } from '@/lib/contact-email'
+
 export async function POST(request) {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
@@ -45,34 +47,9 @@ export async function POST(request) {
     return Response.json({ error: 'Your message could not be saved. Please try again later.' }, { status: 500 })
   }
 
-  const resendApiKey = process.env.RESEND_API_KEY
-  const notificationEmail = process.env.CONTACT_NOTIFICATION_EMAIL
-  const fromEmail = process.env.CONTACT_FROM_EMAIL
+  // The message is already stored, so an email failure is reported but never
+  // turned into an error response that would make the visitor think it was lost.
+  const emailWarning = await sendContactEmail({ name, email, message })
 
-  if (resendApiKey && notificationEmail && fromEmail) {
-    try {
-      const emailResponse = await fetch('https://api.resend.com/emails', {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${resendApiKey}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          from: fromEmail,
-          to: [notificationEmail],
-          reply_to: email,
-          subject: `Portfolio message from ${name}`,
-          text: `From: ${name} <${email}>\n\n${message}`
-        })
-      })
-
-      if (!emailResponse.ok) {
-        console.error('Contact email notification failed:', await emailResponse.text())
-      }
-    } catch (notificationError) {
-      console.error('Contact email notification failed:', notificationError)
-    }
-  }
-
-  return Response.json({ ok: true })
+  return Response.json(emailWarning ? { ok: true, warning: emailWarning } : { ok: true })
 }

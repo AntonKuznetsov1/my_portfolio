@@ -23,7 +23,10 @@ export default function Skills() {
             </h2>
             <div className="flex flex-wrap gap-2">
               {SKILLS.map((skill) => (
-                <span key={skill} className="rounded-lg border border-[#3b3b40] bg-[#1b1b1e] px-3 py-2 font-sans text-sm font-normal text-[#dedde0]">
+                <span
+                  key={skill}
+                  className="rounded-lg border border-[#3b3b40] bg-[#1b1b1e] px-3 py-2 font-sans text-sm font-normal text-[#dedde0]"
+                >
                   {skill}
                 </span>
               ))}
@@ -35,7 +38,9 @@ export default function Skills() {
             </h2>
             <ul className="flex flex-col gap-3 pl-5 marker:text-[#f0a878]">
               {SERVICES.map((service) => (
-                <li key={service} className="pl-1">{service}</li>
+                <li key={service} className="pl-1">
+                  {service}
+                </li>
               ))}
             </ul>
           </section>
@@ -45,10 +50,6 @@ export default function Skills() {
             </h2>
             <p>Fredericton High School · Fredericton, New Brunswick</p>
           </section>
-          <p className="mt-8 rounded-xl border border-dashed border-[#3b3b40] bg-[#1b1b1e] px-5 py-4 text-sm text-[#a1a0a5]">
-            These reflect the tools and services Anton has shared so far. Project examples and experience levels will be
-            added as he provides them.
-          </p>
         </div>
       </div>
     </ScrollArea>
