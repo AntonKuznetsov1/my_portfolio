@@ -16,12 +16,18 @@ export const AdminHeader = ({ onSignOut }) => {
   return (
     <header className="sticky inset-x-0 top-0 z-30 flex h-14 shrink-0 items-center justify-between gap-3 border-b border-[#343438] bg-[#171719]/95 px-4 backdrop-blur lg:px-8">
       <div className="flex min-w-0 items-center gap-3">
-        <span
-          aria-label="Anton Kuznetsov"
-          className="flex size-9 shrink-0 items-center justify-center rounded-full border border-[#39393e] bg-[#222225] font-medium text-[#f0a878] shadow-sm"
-        >
-          AK
-        </span>
+          <span
+            aria-label="Anton Kuznetsov"
+            className="flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-full border border-[#39393e] bg-[#222225] shadow-sm"
+          >
+            <img
+              src="/assets/logo.png"
+              alt="Akcadag logo"
+              width={36}
+              height={36}
+              className="size-full object-cover"
+            />
+          </span>
         <div className="flex min-w-0 flex-col">
           <span className="truncate font-sans text-sm font-medium text-[#f0eff1]">Admin</span>
           <span className="truncate text-xs text-[#88878d]">Posts and projects</span>
