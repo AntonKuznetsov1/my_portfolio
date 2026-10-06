@@ -87,6 +87,18 @@ npx wrangler secret put ADMIN_PASSWORD             # must match what you type at
 npx wrangler secret put ADMIN_SESSION_SECRET       # openssl rand -hex 32
 ```
 
+**Every value in `.env.local` is double-quoted, and `wrangler secret put` stores the bytes you paste verbatim.** Pasting
+a line with its quotes (or piping `echo` without `-n`) stores `"value"` while dotenv later loads `value` — the admin
+then rejects every password, and the same two extra characters break the Supabase service key and SMTP. Pipe it through
+dotenv instead of pasting:
+
+```sh
+NAME=ADMIN_PASSWORD node -e \
+  'const v=require("dotenv").parse(require("fs").readFileSync(".env.local"))[process.env.NAME]; process.stdout.write(v)' \
+  | npx wrangler secret put ADMIN_PASSWORD
+# repeat for SUPABASE_SERVICE_ROLE_KEY, ADMIN_SESSION_SECRET, SMTP_USER, SMTP_PASS, CONTACT_TO_EMAIL
+```
+
 Generate a fresh session secret rather than reusing the development one:
 
 ```sh

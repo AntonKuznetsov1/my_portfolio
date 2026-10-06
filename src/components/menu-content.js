@@ -8,12 +8,18 @@ export const MenuContent = () => {
     <div className="flex w-full flex-col font-headers text-sm">
       <div className="flex flex-col gap-4">
         <Link href="/" className="link-card inline-flex items-center gap-2 p-2">
-          <span
-            aria-label="Anton Kuznetsov"
-            className="flex size-10 shrink-0 items-center justify-center rounded-full border border-[#39393e] bg-[#222225] font-medium text-[#f0a878] shadow-sm"
-          >
-            AK
-          </span>
+<span
+              aria-label="Anton Kuznetsov"
+              className="flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-full border border-[#39393e] bg-[#222225] shadow-sm"
+            >
+              <img
+                src="/assets/logo.png"
+                alt="Akcadag logo"
+                width={40}
+                height={40}
+                className="size-full object-contain p-1"
+              />
+            </span>
           <div className="flex flex-col">
             <span className="font-medium text-[#f0eff1]">Anton Kuznetsov</span>
             <span className="text-xs text-[#a1a0a5]">Web Developer &amp; Designer</span>
