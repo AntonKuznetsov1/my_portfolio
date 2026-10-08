@@ -49,7 +49,11 @@ export async function POST(request) {
 
   // The message is already stored, so an email failure is reported but never
   // turned into an error response that would make the visitor think it was lost.
-  const emailWarning = await sendContactEmail({ name, email, message })
-
-  return Response.json(emailWarning ? { ok: true, warning: emailWarning } : { ok: true })
+  const { getCloudflareContext } = await import('@opennextjs/cloudflare')
+  const { ctx } = getCloudflareContext()
+  ctx.waitUntil(
+    sendContactEmail({ name, email, message }).catch((err) => {
+      console.error('Contact email send failed:', err)
+    })
+  )
 }
