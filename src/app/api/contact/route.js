@@ -17,7 +17,6 @@ export async function POST(request) {
     return Response.json({ error: 'Please submit a valid message.' }, { status: 400 })
   }
 
-  // Honeypot: silently accept bots without storing their message.
   if (typeof body.company === 'string' && body.company.trim()) {
     return Response.json({ ok: true })
   }
@@ -37,9 +36,7 @@ export async function POST(request) {
     return Response.json({ error: 'Messages must be between 10 and 5,000 characters.' }, { status: 400 })
   }
 
-  const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-    auth: { persistSession: false }
-  })
+  const supabase = createClient(supabaseUrl, supabaseAnonKey, { auth: { persistSession: false } })
   const { error } = await supabase.from('contact_messages').insert({ name, email, message })
 
   if (error) {
@@ -47,13 +44,11 @@ export async function POST(request) {
     return Response.json({ error: 'Your message could not be saved. Please try again later.' }, { status: 500 })
   }
 
-  // The message is already stored, so an email failure is reported but never
-  // turned into an error response that would make the visitor think it was lost.
-  const { getCloudflareContext } = await import('@opennextjs/cloudflare')
-  const { ctx } = getCloudflareContext()
-  ctx.waitUntil(
-    sendContactEmail({ name, email, message }).catch((err) => {
-      console.error('Contact email send failed:', err)
-    })
-  )
+  try {
+    await sendContactEmail({ name, email, message })
+  } catch (err) {
+    console.error('Contact email send failed:', err)
+  }
+
+  return Response.json({ ok: true })
 }
