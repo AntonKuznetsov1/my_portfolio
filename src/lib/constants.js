@@ -54,10 +54,6 @@ export const LINKS = [
     icon: <PencilLineIcon size={16} />
   },
   {
-    href: '/journey',
-    label: 'Journey',
-    icon: <NavigationIcon size={16} />
-  },
   {
     href: '/projects',
     label: 'Projects',
